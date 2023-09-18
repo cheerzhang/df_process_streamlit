@@ -35,8 +35,10 @@ def app():
                 with col2:
                     st.write(f"file 1 created_at range:")
                     st.write(f":blue[{df1[time_column].min()}] - :blue[{df1[time_column].max()}]")
+                    st.divider()
             with col2:
                 st.write(f"file 1 size: :blue[{df1.shape}]")
+                st.divider()
             if remove_duplicate_bool:
                 id_column = st.selectbox('Selct id Column', df1.columns.values)
         upload_df_2 = st.file_uploader("Choose 2nd data file:", key="file2_upload")
@@ -48,8 +50,10 @@ def app():
                 with col2:
                     st.write(f"file 2 created_at range:")
                     st.write(f":blue[{df2[time_column].min()}] - :blue[{df2[time_column].max()}]")
+                    st.divider()
             with col2:
                 st.write(f"file 2 size: :blue[{df2.shape}]")
+                st.divider()
     if upload_df_1 is not None and upload_df_2 is not None:
         time_tool.start_timer()
         with col1:
@@ -78,6 +82,7 @@ def app():
                         st.write(f":blue[{df2[time_column].min()}] - :blue[{df2[time_column].max()}]")
                         st.success(f"Files combine done!") 
                         st.success(f"time using: {time_tool.end_timer()}")
+                        st.divider()
                     if remove_duplicate_bool:
                         with col2:
                             df_result.drop_duplicates(subset=id_column, keep='first', inplace=True)
@@ -86,6 +91,7 @@ def app():
                             st.write(f":blue[{df2[time_column].min()}] - :blue[{df2[time_column].max()}]")
                             st.success(f"Files duplicate revoming done!") 
                             st.success(f"time using: {time_tool.end_timer()}")
+                            st.divider()
                 with col2:
                     download_csv(df_result)
             else:
@@ -94,11 +100,13 @@ def app():
                     df_result = pd.concat([df1, df2], axis=0)
                     with col2:
                         st.write(f"combined dataframe size (before drop duplicate): :blue[{df_result.shape[0]}]")
+                        st.divider()
                     if remove_duplicate_bool:
                         df_result.drop_duplicates(subset=id_column, keep='first', inplace=True)
                         st.write(f"combined dataframe size (after drop duplicate): :blue[{df_result.shape[0]}]")
                         st.success(f"Files duplicate revoming done!") 
                         st.success(f"time using: {time_tool.end_timer()}")
+                        st.divider()
                 with col2:
                     download_csv(df_result)
         
