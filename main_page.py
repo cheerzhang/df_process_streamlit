@@ -9,3 +9,7 @@ with col1:
         st.markdown("""
             Combine 2 same features dataframe.
         """)
+    with st.expander("[DataFrame TimeSeries Plot](/df_ts_plot)"):
+        st.markdown("""
+            Display timeseries dataframe.
+        """)
