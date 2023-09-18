@@ -10,13 +10,13 @@ def app():
         df1 = pd.read_csv(upload_df_1)
         col1, col2, col3 = st.columns(3)
         with col1:
-            time_column = st.selectbox('Selct Time Column', df1.columns.values)
+            time_column = st.selectbox('Select Time Column', df1.columns.values)
         with col2:
-            numeric_columns = st.selectbox('Selct Numeric Column', df1.select_dtypes(include='number').columns.values)
+            numeric_columns = st.selectbox('Select Numeric Column', df1.select_dtypes(include='number').columns.values)
         with col3:
-            agg_frequence = st.selectbox('Selct Aggreegation', ['Day', 'Week', 'Month'], disabled=True)
+            agg_frequence = st.selectbox('Select Aggreegation', ['Day', 'Week', 'Month'], disabled=True)
         # processing
-        col_left, col_right = st.columns([3, 1])
+        col_left, col_right = st.columns([3, 1], gap="medium")
         with st.spinner("processing..."):
             time_tool.start_timer()
             df1[time_column] = pd.to_datetime(df1[time_column], errors='coerce') 
@@ -29,6 +29,7 @@ def app():
                 st.line_chart(day_user_counts[[numeric_columns]])
             with col_right:
                 st.dataframe(day_user_counts)
+            st.success(f"procesed, time using: {time_tool.end_timer()}")
 
 
 if __name__ == '__main__':
