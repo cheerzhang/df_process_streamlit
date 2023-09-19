@@ -15,5 +15,5 @@ class GetModelPredict:
         response = requests.post(api_url, json=data)
         if response.status_code == 200:
             response_data = response.json()
-            df['pred'] = response_data['Predict of gender']
+            df['pred'] = response_data['gender']
             return df
