@@ -40,7 +40,6 @@ def app():
             model_obj.set_url("http://16.170.214.92:5002/api/predict_gender_v1")
             df_gender = model_obj.call_gender_model(df_gender, first_name_column)
             df1['gender'] = df_gender['pred']
-            # plot ratio of female everyday
         else:
             col_gender_select_left, col_gender_select_right = st.columns(2)
             with col_gender_select_left:
@@ -48,10 +47,11 @@ def app():
             with col_gender_select_right:
                 gender_f_values = st.multiselect('Values as Female', df1[gender_column].unique())
                 df1['gender'] = df1[gender_column].apply(lambda x: 'F' if x in gender_f_values else 'M')
+        # plot ratio of female male 
         female_user_counts = df1[df1['gender'] == 'F'].groupby('day')['gender'].count().reset_index(name='female_count')
         total_user_counts = df1.groupby('day')['gender'].count().reset_index(name='total_count')
         gender_df = total_user_counts.merge(female_user_counts, on='day')
-        gender_df['female_ratio'] = gender_df['female_count'] / gender_df['total_count']
+        gender_df['female_ratio'] = round(gender_df['female_count'] / gender_df['total_count'], 2)
         gender_df['male_ratio'] = 1 - gender_df['female_ratio']
         gender_df.set_index('day', inplace=True)
         col_f_left, col_f_right = st.columns([3, 1])
