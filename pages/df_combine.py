@@ -79,7 +79,7 @@ def app():
                     with col2:
                         st.write(f"combined dataframe size (before drop duplicate): :blue[{df_result.shape[0]}]")
                         st.write(f"combined dataframe time range")
-                        st.write(f":blue[{df2[time_column].min()}] - :blue[{df2[time_column].max()}]")
+                        st.write(f":blue[{df_result[time_column].min()}] - :blue[{df_result[time_column].max()}]")
                         st.success(f"Files combine done!") 
                         st.success(f"time using: {time_tool.end_timer()}")
                         st.divider()
@@ -88,7 +88,7 @@ def app():
                             df_result.drop_duplicates(subset=id_column, keep='first', inplace=True)
                             st.write(f"combined dataframe size (after drop duplicate): :blue[{df_result.shape[0]}]")
                             st.write(f"combined dataframe time range")
-                            st.write(f":blue[{df2[time_column].min()}] - :blue[{df2[time_column].max()}]")
+                            st.write(f":blue[{df_result[time_column].min()}] - :blue[{df_result[time_column].max()}]")
                             st.success(f"Files duplicate revoming done!") 
                             st.success(f"time using: {time_tool.end_timer()}")
                             st.divider()

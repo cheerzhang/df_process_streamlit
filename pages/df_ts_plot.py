@@ -1,11 +1,13 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 import pandas as pd
-from util import model_util, process_util
+from util import model_util, process_util, data_util
 
 def app():
     st.markdown("# Display TimeSeries DataFrame")
     time_tool = process_util.Time_Tool()
     model_obj = model_util.GetModelPredict()
+    data_obj = data_util.FE_Base()
     upload_df_1 = st.file_uploader("Choose 1st data file:", key="file1_upload")
     if upload_df_1 is not None:
         df1 = pd.read_csv(upload_df_1)
@@ -57,8 +59,43 @@ def app():
         col_f_left, col_f_right = st.columns([3, 1])
         with col_f_left:
             st.bar_chart(gender_df[['female_ratio', 'male_ratio']])
+            st.bar_chart(gender_df[['female_ratio']])
+            st.line_chart(gender_df[['female_ratio']])
         with col_f_right:
             st.dataframe(gender_df[['female_ratio', 'male_ratio', 'female_count', 'total_count']])
+        st.divider()
+        # --------------------------------------  Age Logic --------------------------------------
+        col_age_select_left, col_age_select_right = st.columns(2)
+        with col_age_select_left:
+            birthdate_column = st.selectbox('Select Birthdate Column', df1.columns.values)
+            df1[birthdate_column] = pd.to_datetime(df1[birthdate_column], errors='coerce')
+            df1['age'] = data_obj.calculate_age(df1, birthdate_column)
+            df1['date'] = pd.to_datetime(df1['date'])
+            df1["day"] = df1['date'].dt.date
+            display_date = st.selectbox('Select Time Value', df1['day'].unique(), index=0)
+            df_age_distrub = df1[df1['day'] == display_date]
+            # age distribution
+            fig, ax = plt.subplots()
+            ax.hist(df_age_distrub['age'], bins=10, edgecolor='k')
+            ax.set_xlabel('Age')
+            ax.set_ylabel('Frequency')
+            st.pyplot(fig) 
+        with col_age_select_right:
+            # age range
+            age_range = st.slider('Select a range of age', 0, 100, (25, 35))
+            df1['age_range'] = df1['age'].apply(lambda x: 1 if (x>=age_range[0] and x<=age_range[1]) else 0)
+            df1['f_age_range'] = (df1['age_range'] == 1) & (df1['gender'] == 'F')
+            df1['f_age_range'] = df1['f_age_range'].astype(int)
+            # st.dataframe(df1[['age', 'gender', 'f_age_range']])
+            female_age_counts = df1[df1['f_age_range'] == 1].groupby('day')['f_age_range'].count().reset_index(name='female_age_counts')
+            total_user_counts = df1.groupby('day')['f_age_range'].count().reset_index(name='total_count')
+            f_age_df = total_user_counts.merge(female_age_counts, on='day')
+            f_age_df['female_age_ratio'] = round(f_age_df['female_age_counts'] / f_age_df['total_count'], 2)
+            f_age_df['rest_ratio'] = 1 - f_age_df['female_age_ratio']
+            f_age_df.set_index('day', inplace=True) 
+            st.dataframe(f_age_df[['female_age_ratio', 'female_age_counts', 'total_count']])
+        st.bar_chart(f_age_df[['female_age_ratio']])
+        st.line_chart(f_age_df[['female_age_ratio']]) 
 
 
 if __name__ == '__main__':
