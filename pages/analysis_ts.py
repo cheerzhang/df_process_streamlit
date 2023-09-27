@@ -13,7 +13,7 @@ def app():
     upload_df_2 = st.file_uploader("Choose pass rate data file:", key="file2_upload")
     if upload_df_2 is not None:
         df = pd.read_csv(upload_df_2)
-        col_option1, col_option2 = st.columns([3, 1])
+        col_option1, col_option2 = st.columns(2)
         with col_option1:
             st.markdown('#### filter options')
             time_column = st.selectbox('Select Time Column', df.columns.values, index=df.columns.get_loc('created_at') if 'created_at' in df.columns.values else 0)
@@ -21,8 +21,13 @@ def app():
             target_column = st.selectbox('Select Analysis Column', df.columns.values, index=0)
         with col_option2:
             st.markdown('#### exxclude values')
-            exclude_column = st.selectbox('Select Exclude Column', df.columns.values, index=0)
-            exclude_values = st.multiselect('Exclude Values', df[exclude_column].unique(), [df[exclude_column].unique()[0]])
+            col_left1, col_right1 = st.columns(2)
+            with col_left1:
+                exclude_column = st.selectbox('Select Exclude Column 1', df.columns.values, index=0)
+                exclude_values = st.multiselect('Exclude Values 1', df[exclude_column].unique(), [df[exclude_column].unique()[0]])
+            with col_right1:
+                exclude_column = st.selectbox('Select Exclude Column 2', df.columns.values, index=0)
+                exclude_values = st.multiselect('Exclude Values 2', df[exclude_column].unique(), [df[exclude_column].unique()[0]])
         # exclude logic
         df = df[~df[exclude_column].isin(exclude_values)]
         df[time_column] = pd.to_datetime(df[time_column], errors='coerce') 
