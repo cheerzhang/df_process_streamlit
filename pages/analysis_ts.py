@@ -50,11 +50,11 @@ def app():
         df_3['null_in_all'] = df_3['total_null'] / (df_3['total_true'] + df_3['total_false'] + df_3['total_null'])
         df_3['null_in_fn'] = df_3['total_null'] / (df_3['total_false'] + df_3['total_null'])
         df_3['null_in_tn'] = df_3['total_null'] / (df_3['total_true'] + df_3['total_null'])
-        with col_option2:
-            ratio_columns = ['true_in_all', 'true_in_tf', 'true_in_tn', 'false_in_all', 'false_in_tf', 'false_in_fn', 'null_in_all', 'null_in_fn', 'null_in_tn']
-            display_columns = st.multiselect('Select Display Columns', ratio_columns, ratio_columns)
+
         st.markdown('True, False, Null ratio')
         with st.expander('True, False, Null ratio'):
+            ratio_columns = ['true_in_all', 'true_in_tf', 'true_in_tn', 'false_in_all', 'false_in_tf', 'false_in_fn', 'null_in_all', 'null_in_fn', 'null_in_tn']
+            display_columns = st.multiselect('Select Display Columns', ratio_columns, ratio_columns)
             st.line_chart(df_3[display_columns])
         
         
