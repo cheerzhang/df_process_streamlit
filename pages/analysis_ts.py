@@ -42,7 +42,7 @@ def app():
         df_3.set_index('time', inplace=True)
         st.markdown('Total True, Total False, Total Null counts')
         with st.expander('Total True, Total False, Total Null counts'):
-            st.line_chart(df_3[['total_true', 'total_false', 'total_null']])
+            st.bar_chart(df_3[['total_true', 'total_false', 'total_null']])
         # calculate ratio
         df_3['true_in_all'] = df_3['total_true'] / (df_3['total_true'] + df_3['total_false'] + df_3['total_null'])
         df_3['true_in_tf'] = df_3['total_true'] / (df_3['total_true'] + df_3['total_false'])
@@ -60,7 +60,7 @@ def app():
         with st.expander('True, False, Null ratio'):
             ratio_columns = ['true_in_all', 'true_in_tf', 'true_in_tn', 'false_in_all', 'false_in_tf', 'false_in_fn', 'null_in_all', 'null_in_fn', 'null_in_tn']
             display_columns = st.multiselect('Select Display Columns', ratio_columns, ratio_columns)
-            st.line_chart(df_3[display_columns])
+            st.bar_chart(df_3[display_columns])
         
         
 
