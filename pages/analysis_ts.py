@@ -67,7 +67,7 @@ def app():
         for item in  ratio_columns:
             df_3[f'last_{item}'] = df_3[item] - df_3[item].shift(1)
         df_last_2 = df_3.iloc[-2:]
-        st.dataframe(df_last_2)
+        st.dataframe(df_last_2[[f'true_in_tf', 'last_true_in_tf']])
         
         
 
