@@ -101,15 +101,16 @@ def app():
                 'Change': change,
                 'Change %': f'{np.round(change * 100, 2)} %'
             })
-        # Create a DataFrame from the changes
         # Display the DataFrame using st.dataframe
         st.markdown(f"Report of changed in {last_2_time[-1]} compare to {last_2_time[-2]}")
         overall_report = pd.DataFrame(changes)
         col_big_negtive, col_negtive, col_other = st.columns(3)
         with col_big_negtive:
-            st.dataframe(overall_report[overall_report['Change'] <= -0.05])
+            st.dataframe(overall_report[overall_report['Change'] <= -0.05].sort_values(by='Change'))
         with col_negtive:
-            st.dataframe(overall_report[overall_report['Change'] <= 0])
+            st.dataframe(overall_report[overall_report['Change'] < 0].sort_values(by='Change'))
+        with col_other:
+            st.dataframe(overall_report[overall_report['Change'] >= 0].sort_values(by='Change'))
 
         
 
