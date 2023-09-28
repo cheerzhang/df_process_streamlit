@@ -23,8 +23,8 @@ def app():
             st.markdown('#### exclude values')
             col_left1, col_right1 = st.columns(2)
             with col_left1:
-                include_column1 = st.selectbox('Select Exclude Column 1', df.columns.values, index=0)
-                include_values1 = st.multiselect('Exclude Values 1', df[include_column1].unique(), [df[include_column1].unique()])
+                include_column1 = st.selectbox('Select Include Column 1', df.columns.values, index=0)
+                include_values1 = st.multiselect('Include Values 1', df[include_column1].unique(), [df[include_column1].unique()[0]])
             with col_right1:
                 exclude_column = st.selectbox('Select Exclude Column 2', df.columns.values, index=0)
                 exclude_values = st.multiselect('Exclude Values 2', df[exclude_column].unique(), [df[exclude_column].unique()[0]])
