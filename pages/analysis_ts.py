@@ -103,7 +103,12 @@ def app():
         # Create a DataFrame from the changes
         # Display the DataFrame using st.dataframe
         st.markdown(f"Report of changed in {last_2_time[-1]} compare to {last_2_time[-2]}")
-        st.dataframe(pd.DataFrame(changes))
+        overall_report = pd.DataFrame(changes)
+        col_big_negtive, col_negtive, col_other = st.columns(3)
+        with col_big_negtive:
+            st.dataframe(overall_report[overall_report['Change'] <= -0.05])
+        with col_negtive:
+            st.dataframe(overall_report[overall_report['Change'] <= 0])
 
         
 
