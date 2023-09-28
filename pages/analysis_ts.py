@@ -86,14 +86,15 @@ def app():
         df_[time_column] = pd.to_datetime(df_[time_column], errors='coerce') 
         df_['time'] = df_[time_column]
         # overall report
-        last_2_time, change = calculate_change(df_, target_column, frequency_column, include_column1, [include_value])
+        all_values = df_[include_column1].unique()
+        last_2_time, change = calculate_change(df_, target_column, frequency_column, include_column1, all_values)
         changes = [{
                 f'{include_column1}': 'All',
                 'Change': change,
                 'Change %': f'{np.round(change * 100, 2)} %'
         }]
         # Calculate the change for each include value
-        for include_value in df_[include_column1].unique():
+        for include_value in all_values:
             _, change = calculate_change(df_, target_column, frequency_column, include_column1, [include_value])
             changes.append({
                 f'{include_column1}': include_value,
