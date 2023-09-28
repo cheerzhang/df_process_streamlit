@@ -8,12 +8,12 @@ frequency_dist = {
       'Week': 'W-SUN'
 }
 
-def each_T_tf_rate(df, include_column, include_values):
+def each_T_tf_rate(df, target_column, frequency_column, include_column, include_values):
     df_include = df[df[include_column].isin(include_values)]
     df.set_index('time', inplace=True)
-    df_3_true = df[df[df_include] == 1].resample(frequency_dist[df_include]).size().reset_index(name='total_true')
-    df_3_false = df[df[df_include] == 0].resample(frequency_dist[df_include]).size().reset_index(name='total_false')
-    df_3_null = df[df[df_include] == -1].resample(frequency_dist[df_include]).size().reset_index(name='total_null')
+    df_3_true = df[df[target_column] == 1].resample(frequency_dist[frequency_column]).size().reset_index(name='total_true')
+    df_3_false = df[df[target_column] == 0].resample(frequency_dist[frequency_column]).size().reset_index(name='total_false')
+    df_3_null = df[df[target_column] == -1].resample(frequency_dist[frequency_column]).size().reset_index(name='total_null')
     df_3 = df_3_true.merge(df_3_false, on='time', how='outer')
     df_3 = df_3.merge(df_3_null, on='time', how='outer')
     df_3.set_index('time', inplace=True)
@@ -80,9 +80,9 @@ def app():
         id_arr = []
         score_arr = []
         for item in df[include_column1].unique():
-            time, score = each_T_tf_rate(df, include_column1, item)
+            time, score = each_T_tf_rate(df, target_column, frequency_column, include_column1, item)
             id_arr.append(item)
-            score_arr.append(item)
+            score_arr.append(score)
         st.markdown(f"Report of changed in {time}")
         st.dataframe(pd.DataFrame({f'{include_column1}': id_arr, 'Change': score_arr}))
         
