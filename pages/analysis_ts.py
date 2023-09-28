@@ -8,6 +8,19 @@ frequency_dist = {
       'Week': 'W-SUN'
 }
 
+def each_T_tf_rate(df, include_column, include_values):
+    df_include = df[df[include_column].isin(include_values)]
+    df.set_index('time', inplace=True)
+    df_3_true = df[df[df_include] == 1].resample(frequency_dist[df_include]).size().reset_index(name='total_true')
+    df_3_false = df[df[df_include] == 0].resample(frequency_dist[df_include]).size().reset_index(name='total_false')
+    df_3_null = df[df[df_include] == -1].resample(frequency_dist[df_include]).size().reset_index(name='total_null')
+    df_3 = df_3_true.merge(df_3_false, on='time', how='outer')
+    df_3 = df_3.merge(df_3_null, on='time', how='outer')
+    df_3.set_index('time', inplace=True)
+    df_3['true_in_tf'] = df_3['total_true'] / (df_3['total_true'] + df_3['total_false'])
+    df_3[f'last_true_in_tf'] = df_3['true_in_tf'] - df_3['true_in_tf'].shift(1)
+    df_last_1 = df_3.iloc[-1:]
+    return df_last_1['time'].values, df_last_1[f'last_true_in_tf'].values
 
 def app():
     upload_df_2 = st.file_uploader("Choose pass rate data file:", key="file2_upload")
@@ -29,10 +42,10 @@ def app():
                 exclude_column = st.selectbox('Select Exclude Column 2', df.columns.values, index=0)
                 exclude_values = st.multiselect('Exclude Values 2', df[exclude_column].unique(), [df[exclude_column].unique()[0]])
         # exclude logic
-        df = df[df[include_column1].isin(include_values1)]
-        df[time_column] = pd.to_datetime(df[time_column], errors='coerce') 
-        df['time'] = df[time_column]
-        df.set_index('time', inplace=True)
+        df_ = df[df[include_column1].isin(include_values1)]
+        df_[time_column] = pd.to_datetime(df_[time_column], errors='coerce') 
+        df_['time'] = df[time_column]
+        df_.set_index('time', inplace=True)
         # time series logic - 3 value
         df_3_true = df[df[target_column] == 1].resample(frequency_dist[frequency_column]).size().reset_index(name='total_true')
         df_3_false = df[df[target_column] == 0].resample(frequency_dist[frequency_column]).size().reset_index(name='total_false')
@@ -64,10 +77,14 @@ def app():
             st.bar_chart(df_3[display_columns])
 
         st.markdown('Report')
-        for item in  ratio_columns:
-            df_3[f'last_{item}'] = df_3[item] - df_3[item].shift(1)
-        df_last_2 = df_3.iloc[-2:]
-        st.dataframe(df_last_2[[f'true_in_tf', 'last_true_in_tf']])
+        id_arr = []
+        score_arr = []
+        for item in df[include_column1].unique():
+            time, score = each_T_tf_rate(df, include_column1, item)
+            id_arr.append(item)
+            score_arr.append(item)
+        st.markdown(f"Report of changed in {time}")
+        st.dataframe(pd.DataFrame({f'{include_column1}': id_arr, 'Change': score_arr}))
         
         
 
