@@ -44,7 +44,7 @@ def calculate_ratio(df, target_column, frequency_column, prefix):
     return counts
 
 
-def display_by_filter(df, target_column, frequency_column, include_column, include_values, type_column=['p', 'c', 'all']):
+def display_by_filter(df, target_column, frequency_column, include_column, include_values, type_column=['p', 'c']):
     if 'All' in include_values:
         filtered_df = df
     else:
@@ -88,7 +88,7 @@ def app():
             time_column = st.selectbox('Select Time Column', df.columns.values, index=df.columns.get_loc('created_at') if 'created_at' in df.columns.values else 0)
             frequency_column = st.selectbox('Select Frequency', ['Week', 'Day', 'Hour'], index=0) 
             target_column = st.selectbox('Select Analysis Column', df.columns.values, index=5)
-            type_column = st.multiselect('Select Type Value (diaplay)', ['p', 'c', 'all'], ['p', 'c', 'all'])
+            type_column = st.multiselect('Select Type Value (diaplay)', ['p', 'c'], ['p', 'c'])
         with col_option2:
             st.markdown('#### exclude values')
             col_left1, col_right1 = st.columns(2)
