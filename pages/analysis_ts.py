@@ -61,6 +61,8 @@ def app():
             time_column = st.selectbox('Select Time Column', df.columns.values, index=df.columns.get_loc('created_at') if 'created_at' in df.columns.values else 0)
             frequency_column = st.selectbox('Select Frequency', ['Week', 'Day', 'Hour'], index=1) 
             target_column = st.selectbox('Select Analysis Column', df.columns.values, index=5)
+            type_column = st.multiselect('Select Type Value', ['p', 'c'], ['p', 'c'])
+            df = df[df['type'].isin(type_column)]
         with col_option2:
             st.markdown('#### exclude values')
             col_left1, col_right1 = st.columns(2)
