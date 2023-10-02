@@ -94,7 +94,7 @@ def app():
             col_left1, col_right1 = st.columns(2)
             with col_left1:
                 include_column1 = st.selectbox('Select Include Column 1', df.columns.values, index=2)
-                df[include_column1] = df[include_column1].astype(str)
+                # df[include_column1] = df[include_column1].astype(str)
                 options1 = ['All'] + df[include_column1].unique().tolist()
                 include_values1 = st.multiselect('Include Values 1', options1, default=['All'])
             with col_right1:
