@@ -46,13 +46,15 @@ def display_by_filter(df, target_column, frequency_column, include_column, inclu
         st.line_chart(counts[['True', 'False', 'counts']])
     with col_right_plot:
         st.line_chart(counts[['true_in_tf']])
+    with st.expander("data table"):
+        st.dataframe(counts)
 
 def app():
     upload_df_2 = st.file_uploader("Choose pass rate data file:", key="file2_upload")
     if upload_df_2 is not None:
         df = pd.read_csv(upload_df_2)
         # filter one week by one week
-        df = df[df['created_at'] < '2023-09-25']
+        df = df[df['created_at'] < '2023-10-02']
         col_option1, col_option2 = st.columns(2)
         with col_option1:
             st.markdown('#### filter options')
