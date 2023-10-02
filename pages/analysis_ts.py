@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 frequency_dist = {
       'Hour': 'H',
       'Day': 'D',
-      'Week': 'W-SUN'
+      'Week': 'W-MON'
 }
 
 def calculate_change(df, target_column, frequency_column, include_column, include_values):
