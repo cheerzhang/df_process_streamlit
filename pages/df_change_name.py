@@ -12,7 +12,7 @@ def app():
         new_names = {}
         for name in original_names:
             new_names[name] = st.text_input(f'Original Name: {name}', name, key=f"text_input_{name}")
-        df_new = df.rename(columns=name)
+        df_new = df.rename(columns=new_names)
         with col_new_df:
             st.dataframe(df_new)
 
