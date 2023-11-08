@@ -1,0 +1,17 @@
+credentials:
+  usernames:
+    user:
+      email: xxx@gmail.com
+      name: User
+      password: "$2b$12$KMe2nsA8F5iB14ixjRyS6umDJyYLuYSF.kdIiTDlI/.euR37FOc2."
+    admin:
+      email: xxx@gmail.com
+      name: Admin User
+      password: "$2b$12$.bENDV3fa35DbRPNcAN0puXqSF8C3a3zWG6ebIm5EGlwokRhSjszi"
+cookie:
+  expiry_days: 30
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+  - xxx@gmail.com

@@ -1,15 +1,30 @@
 import streamlit as st
+import streamlit_authenticator as stauth
 
-# Title: Data Scientist Work Note
-st.markdown("# Dataframe Process Tools")
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    with st.expander("[DataFrame Combine](/df_combine)"):
-        st.markdown("""
-            Combine 2 same features dataframe.
-        """)
-    with st.expander("[DataFrame TimeSeries Plot](/df_ts_plot)"):
-        st.markdown("""
-            Display timeseries dataframe.
-        """)
+import yaml
+from yaml.loader import SafeLoader
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized']
+)
+name, authentication_status, username = authenticator.login('Login', 'main')
+
+
+from page.combine_df import combine_two_df
+
+if st.session_state["authentication_status"]:
+    with st.sidebar:
+        authenticator.logout('Logout', 'main')
+        st.write(f'Welcome *{st.session_state["name"]}*')
+    st.title('Combine Dataframe')
+    combine_two_df()
+elif st.session_state["authentication_status"] == False:
+    st.error('Username/password is incorrect')
+elif st.session_state["authentication_status"] == None:
+    st.warning('Please enter your username and password')
