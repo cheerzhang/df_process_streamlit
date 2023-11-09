@@ -23,6 +23,8 @@ def get_psi():
                 # do repeat check
                 arr_1 = df1[df1_column].unique()
                 st.write(f"All Catogery is :blue[{len(arr_1)}]")
+
+
     with col2:
         upload_df_2 = st.file_uploader("Choose 2nd data file:", key="psi_2_upload")
         if upload_df_2 is not None:
